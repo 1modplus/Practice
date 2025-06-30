@@ -81,8 +81,9 @@ public class Rocket extends Ability {
         if (event.getEntity().getType() == EntityType.PLAYER && event.getCause() == EntityDamageEvent.DamageCause.FALL) {
             final Player player = (Player)event.getEntity();
             Profile profile = Profile.get(player.getUniqueId());
-            if (profile.getRocket().onCooldown(player)) {
+            if (player.hasMetadata("rocket")) {
                 event.setCancelled(true);
+                player.removeMetadata("rocket", HyPractice.get());
             }
         }
     }

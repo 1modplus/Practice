@@ -52,7 +52,6 @@ public class AbilityManager {
         this.luckyIngot = new LuckyIngot();
     }
 
-
     public void load() {
         Ability.getAbilities().forEach(Ability::register);
     }

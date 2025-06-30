@@ -6,6 +6,7 @@ import com.hysteria.practice.essentials.abilities.Ability;
 import com.hysteria.practice.player.profile.Profile;
 import com.hysteria.practice.utilities.PlayerUtil;
 import com.hysteria.practice.utilities.chat.CC;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
@@ -13,6 +14,11 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Scrambler extends Ability {
 
@@ -48,7 +54,7 @@ public class Scrambler extends Ability {
             profile.getScrambler().applyCooldown(damager, 60 * 1000);
             profile.getPartneritem().applyCooldown(damager,  10 * 1000);
 
-            this.random(victim);
+            shuffleInventory(victim);
 
             plugin.getAbilityManager().cooldownExpired(damager, this.getName(), this.getAbility());
             plugin.getAbilityManager().playerMessage(damager, this.getAbility());
@@ -91,29 +97,23 @@ public class Scrambler extends Ability {
         }
     }
 
-    private void random(Player victim) {
-        Inventory victimInventory = victim.getInventory();
+    private void shuffleInventory(Player player) {
+        List<ItemStack> playerHotbar = new ArrayList<>(9);
+        PlayerInventory inventory = player.getInventory();
+        ItemStack empty = new ItemStack(Material.AIR);
 
-        ItemStack slot1 = victimInventory.getItem(0);
-        ItemStack slot2 = victimInventory.getItem(1);
-        ItemStack slot3 = victimInventory.getItem(2);
-        ItemStack slot4 = victimInventory.getItem(3);
-        ItemStack slot5 = victimInventory.getItem(4);
-        ItemStack slot6 = victimInventory.getItem(5);
-        ItemStack slot7 = victimInventory.getItem(6);
-        ItemStack slot8 = victimInventory.getItem(7);
-        ItemStack slot9 = victimInventory.getItem(8);
+        for (int i = 0; i < 9; i++) {
+            playerHotbar.add(inventory.getItem(i));
+        }
 
-        victimInventory.setItem(0, slot4);
-        victimInventory.setItem(1, slot3);
-        victimInventory.setItem(2, slot6);
-        victimInventory.setItem(3, slot8);
-        victimInventory.setItem(4, slot9);
-        victimInventory.setItem(5, slot1);
-        victimInventory.setItem(6, slot2);
-        victimInventory.setItem(7, slot5);
-        victimInventory.setItem(8, slot7);
+        Collections.shuffle(playerHotbar);
 
-        victim.updateInventory();
+        for (int i = 0; i < playerHotbar.size(); i++) {
+            ItemStack item = playerHotbar.get(i);
+            inventory.setItem(i, item == null ? empty : item);
+        }
+
+        player.updateInventory();
+        playerHotbar.clear();
     }
 }
