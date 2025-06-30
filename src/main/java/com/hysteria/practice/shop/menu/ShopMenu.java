@@ -40,8 +40,7 @@ public class ShopMenu extends Menu {
         this.fillEmptySlots(buttons, PLACEHOLDER_ITEM);
 
         buttons.put(10, new KillEffectsShopButton());
-        buttons.put(11, new RankShopButton());
-        buttons.put(12, new TagShopButton());
+        buttons.put(12, new RankShopButton());
 
         buttons.put(16, new CosmeticsShopButton());
 
